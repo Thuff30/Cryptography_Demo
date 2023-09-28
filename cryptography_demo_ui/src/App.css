@@ -1,0 +1,200 @@
+.App {
+    text-align: center;
+}
+
+.App-logo {
+    height: 40vmin;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
+}
+
+.navbar {
+    background-color: whitesmoke;
+    min-height: 5vh;
+    max-height: 20vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    box-shadow: black, 5px, 5px, inset;
+}
+
+.nav-item {
+    font-size: calc(10px + 2vmin);
+    color: black;
+    font-style: normal;
+}
+
+.App-Footer {
+    background-color: whitesmoke;
+    min-height: 10vh;
+    max-height: 25vh;
+}
+
+.App-Body {
+    background-color: slategray;
+    min-height: 85vh;
+    color: white;
+}
+
+.App-link {
+    color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+div.mainContainer {
+    background-color: slategray;
+    min-height: 85vh;
+    display: flex;
+    color: white;
+    justify-content: center;
+    display: block;
+    padding-top: 2vh;
+    padding-bottom: 5vh;
+}
+
+div.enigmaContainer {
+    background-color: slategray;
+    min-height: 85vh;
+    display: flex;
+    color: white;
+    justify-content: center;
+    display: block;
+    padding-top: 2vh;
+    padding-bottom: 5vh;
+}
+
+div.radioContainer {
+    justify-content: center;
+    padding-top: 2vh;
+}
+
+.enigmaHalf {
+    /*    display: block;
+*/ width: 50vw;
+    height: 100%;
+    justify-content: center;
+    vertical-align: bottom;
+}
+
+.steckerRow {
+    display: inline-flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.steckerPanel {
+    margin-top: 20px;
+    padding-bottom: 40px;
+    align-content: center;
+    background-image: linear-gradient(to bottom right, gray, silver, gray);
+}
+
+.enig-drop_down {
+    width: auto;
+    background-color: lightyellow;
+    color: black;
+    border-style: solid;
+    border-width: 3px;
+    border-color: black;
+    padding: 2px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: auto;
+    margin-bottom: auto;
+    border-radius: 20px;
+}
+
+p.enig-drop_down {
+    height: 10%;
+    vertical-align: central;
+}
+
+.panel {
+    margin: 20px;
+    border-width: 2px;
+    box-shadow: black 1px 1px 2px 2px inset;
+    background-image: linear-gradient(to bottom right, gray, silver, gray);
+}
+
+.panelHeader {
+    font-weight: bold;
+    font-size: medium;
+}
+
+.inner-panelHeader {
+    color: black;
+    font-weight: normal;
+}
+
+.walzenSliderPanel {
+    display: inline-flex;
+    height: 30vh;
+    justify-content: center;
+}
+
+.sliderDiv {
+    margin: 4%;
+    border-color: lightgray;
+    border-width: 2px;
+    border-style: solid;
+    box-shadow: 0.5px 0.5px 1px 1px black;
+    background-image: linear-gradient(to right, gray, silver, silver, silver, gray);
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+    background-color: black;
+    width: 2px;
+    border-color: dimgray;
+    border-width: 4px;
+    border-style: inset;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    position: relative;
+    -webkit-appearance: none;
+    background-color: linear-gradient(black, dimgray);
+    width: 2px;
+    height: 2px;
+    border-radius: 6px;
+    box-shadow: 0 0 0 2px #683B31, 3px 0 0 10px #7D4F44 inset;
+}
+
+.walzenSlider {
+    appearance: slider-vertical;
+    background-color: darkslateblue;
+    border-color: black;
+    border: solid;
+    border-width: 2px;
+    cursor: grab;
+    height: 25vh;
+}
+
+    .walzenSlider :hover {
+        color: brown;
+    }
+
+    .walzenSlider :focus {
+        cursor: grabbing;
+    }
+
+.steckerDiv {
+    display: block;
+}
+
+.entry-field {
+}
