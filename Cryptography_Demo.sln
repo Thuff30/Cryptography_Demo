@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33801.468
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Cryptography_Demo_BL", "Cryptography_Demo_BL\Cryptography_Demo_BL.pyproj", "{DEF230A1-4014-44D2-B875-FAF12336985C}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "cryptography_demo_ui", "Cryptography_Demo_UI\cryptography_demo_ui.esproj", "{98F8DE14-EC72-4BBC-9822-A43BDA6CDE6E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DEF230A1-4014-44D2-B875-FAF12336985C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEF230A1-4014-44D2-B875-FAF12336985C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEF230A1-4014-44D2-B875-FAF12336985C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEF230A1-4014-44D2-B875-FAF12336985C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98F8DE14-EC72-4BBC-9822-A43BDA6CDE6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98F8DE14-EC72-4BBC-9822-A43BDA6CDE6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98F8DE14-EC72-4BBC-9822-A43BDA6CDE6E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{98F8DE14-EC72-4BBC-9822-A43BDA6CDE6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98F8DE14-EC72-4BBC-9822-A43BDA6CDE6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98F8DE14-EC72-4BBC-9822-A43BDA6CDE6E}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AB708A56-BA3F-4D0A-89E9-B3FB800F3042}
+	EndGlobalSection
+EndGlobal
