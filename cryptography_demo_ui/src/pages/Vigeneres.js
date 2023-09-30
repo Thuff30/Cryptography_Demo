@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { InputField } from '../components/fields/InputField';
-import { Encode, Decode } from '../functions/vigenereFunctions';
 import Button from 'react-bootstrap/Button';
 
 export function Vigeneres(props) {

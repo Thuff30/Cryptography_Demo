@@ -4,11 +4,12 @@ import { WalzenSliders } from '../components/fields/WalzenSliders'
 import { InputField } from '../components/fields/InputField';
 import { WalzenRow } from '../components/fields/WalzenRow';
 import { SteckerbrettMatches } from '../components/fields/SteckerbrettMatches';
-import { StartEncoding } from '../functions/enigmaFunctions';
 import { FindIndex, FindIndexesFromVal } from "../functions/sharedFunctions";
 import '../App.css';
 
 export const Enigma = () => {
+    const DECODE = "decode";
+    const ENCODE = "encode";
     const defaultRow1 = [
         {
             "key": "Q",
@@ -119,6 +120,7 @@ export const Enigma = () => {
             "value": ""
         }
     ];
+    const [direction, setDirection] = useState(ENCODE);
     const [walzen1, setWalzen1] = useState('');
     const [walzen2, setWalzen2] = useState('');
     const [walzen3, setWalzen3] = useState('');
@@ -133,6 +135,11 @@ export const Enigma = () => {
     const [disableDrops, setDisableDrops] = useState(false);
     const [input, setInput] = useState('');
     const [output, setOutput] = useState('');
+
+    const radioChanged = (e) => {
+        setDirection(e.target.id.includes(ENCODE) ? ENCODE : DECODE);
+        setOutput("");
+    }
 
     const updateUmkehrWalze = (e) => {
         setUmkehrwalze(e.target.value);
@@ -540,7 +547,7 @@ export const Enigma = () => {
         setInput(e.target.value.toUpperCase());
     }
 
-    const updateOutput = (e) => {
+    const updateOutput = async (e) => {
         let walzen = [walzen1, walzen2, walzen3];
         let offsets = [walzen1Offset, walzen2Offset, walzen3Offset];
         let steckers = [];
@@ -553,15 +560,34 @@ export const Enigma = () => {
         for (let item of steckerRow3) {
             steckers.push(item);
         }
+        let options = {
+            mode: 'cors',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'charset': 'utf-8'
+            },
+            body: JSON.stringify({
+                'walzenlage': walzen,
+                'grundstellung': offsets,
+                'umkehrwalzeChoice': umkehrwalze,
+                'steckerbrett': steckers,
+                'message': input,
+            })
+        }
+        let url = 'http://localhost:5555/';
+        if (direction === ENCODE) {
+            url += 'encipherEnigma';
+        }
+        else {
+            url += 'decipherEnigma';
+        }
 
-        let enigmaInput = {
-            "walzenlage": walzen,
-            "grundstellung": offsets,
-            "umkehrwalzeChoice": umkehrwalze,
-            "steckerbrett": steckers
-        };
-
-        setOutput(StartEncoding(input, enigmaInput));
+        await fetch(url, options)
+            .then((resp) => resp.json())
+            .then((result) => {
+                setOutput(result)
+            });
     }
 
     const ResetForm = () => {
@@ -583,6 +609,25 @@ export const Enigma = () => {
     return (
         <div className="enigmaContainer" >
             <h1>Enigma Kriegsmarine M3</h1>
+            <div className="radioContainer">
+                <input
+                    type="radio"
+                    id={ENCODE}
+                    name="caesarOption"
+                    value={direction}
+                    onChange={radioChanged}
+                />
+                <label htmlFor="EncodeChoice">Encode</label>
+                <input
+                    type="radio"
+                    id={DECODE}
+                    name="caesarOption"
+                    value={direction}
+                    onChange={radioChanged}
+                />
+                <label htmlFor="DecodeChoice">Decode</label>
+            </div>
+            <br />
             <table>
                 <tr>
                     <td className="enigmaHalf">

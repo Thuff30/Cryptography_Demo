@@ -1,5 +1,5 @@
-from pydoc import plain
-from Functions.shared_functions import shiftArray, find_dictionary
+import re
+from Functions.shared_functions import find_dict_index, shiftArray, find_dictionary
 
 reference = ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z')
 
@@ -10,10 +10,10 @@ class Enigma(object):
     #region Assignment Methods
 
 
-    def _assign_walzen(rotor_num: int) -> list:
-        """
-        Populates a list with the appropriate wiring based on the selected rotor
-        """
+    def __assign_walzen(
+            self, 
+            rotor_num: int) -> list:
+        """Populates a list with the appropriate wiring based on the selected rotor"""
         wiring = []
         if rotor_num == 1:
            wiring = ['E', 'K', 'M', 'F', 'L', 'G', 'D', 'Q', 'V', 'Z', 'N', 'T', 'O', 'W', 'Y', 'H', 'X', 'U', 'S', 'P', 'A', 'I', 'B', 'R', 'C', 'J']
@@ -32,18 +32,16 @@ class Enigma(object):
         elif rotor_num == 8:
             wiring = ['F', 'K', 'Q', 'H', 'T', 'L', 'X', 'O', 'C', 'B', 'J', 'S', 'P', 'D', 'Z', 'R', 'A', 'M', 'E', 'W', 'N', 'I', 'U', 'Y', 'G', 'V']
         
-            return wiring
+        return wiring
 
     
-    def _populate_queue(
+    def __populate_queue(
             self, 
             rotor_num: int) -> list:
-        """
-        Generates a list of dictionaries to represent the wiring in walzen
-        """
+        """Generates a list of dictionaries to represent the wiring in walzen"""
 
         walzen = []
-        arr = self._assign_walzen(rotor_num)
+        arr = self.__assign_walzen(rotor_num)
         i = 0
 
         while i < len(arr):
@@ -56,12 +54,10 @@ class Enigma(object):
         return walzen
 
 
-    def _walzen_wende(
+    def __walzen_wende(
             self, 
             walzenlage: list) -> list:
-        """
-        Determines the point at which a walzen triggers the next walzen to turn
-        """
+        """Determines the point at which a walzen triggers the next walzen to turn"""
 
         turnover = []
         for walzen in walzenlage:
@@ -87,10 +83,10 @@ class Enigma(object):
         return turnover
 
 
-    def _assign_umkehrwalze(umkerwalze_choice: str) -> list:
-        """
-        Determines the wiring pattern for the umkerwalze
-        """
+    def __assign_umkehrwalze(
+            self, 
+            umkerwalze_choice: str) -> list:
+        """Determines the wiring pattern for the umkerwalze"""
         
         umkehrwalze = []
         if umkerwalze_choice == 'B':
@@ -101,19 +97,20 @@ class Enigma(object):
         return umkehrwalze
 
 
-    def _steckerverbindungen(steckerbrett: list) -> list:
-        """
-        Generates alist of dictionaries to represent the Steckerbrett connections
-        """
+    def __steckerverbindungen(
+            self, 
+            steckerbrett: list) -> list:
+        """Generates alist of dictionaries to represent the Steckerbrett connections"""
 
         stecker = []
         i = 0
 
         for pair in steckerbrett:
-            stecker.append({
-                "key": pair["key"],
-                "value": reference.index(pair["value"])
-                })
+            if pair['value'] != '':
+                stecker.append({
+                    "key": pair["key"],
+                    "value": reference.index(pair["value"])
+                    })
 
         while i < len(reference):
             check = find_dictionary(stecker, "key", reference[i])
@@ -133,10 +130,10 @@ class Enigma(object):
     #region Message Preparation Methods
 
 
-    def _remove_punctuation(plaintext: str) -> str:
-        """
-        Replaces all puntuation with bigrams as outlined in Enigma SOPs
-        """
+    def __remove_punctuation(
+            self, 
+            plaintext: str) -> str:
+        """Replaces all puntuation with bigrams as outlined in Enigma SOPs"""
 
         plaintext = plaintext.replace(".", "BX")
         plaintext = plaintext.replace(",", "YB")
@@ -152,10 +149,10 @@ class Enigma(object):
         return plaintext
 
 
-    def _add_punctuation(ciphertext: str) -> str:
-        """
-        Replaces all pretedertimed bigrams with punctuation as outlined in the Enigma SOPs
-        """
+    def __add_punctuation(
+            self,
+            ciphertext: str) -> str:
+        """Replaces all pretedertimed bigrams with punctuation as outlined in the Enigma SOPs"""
 
         ciphertext = ciphertext.replace("BX", ".")
         ciphertext = ciphertext.replace("YB", ",")
@@ -174,35 +171,114 @@ class Enigma(object):
     #endregion
 
 
-    def _shift_walzen(self):
+    #region Message Processing Methods
+
+
+    def __shift_walzen(self):
         """Shifts rotors forward one position"""
 
+        last_pos = 25
+        
+        temp_num = self.walzen1.pop(0)
+        self.walzen1.insert(last_pos, temp_num)
+        
+        if self.positions[0] < 25:
+            self.positions[0] += 1
+        else:
+            self.positions[0] = 0
+
+        notch = find_dictionary(self.turnover, 'key', self.walzenlage[0])['value']
+
+        if self.positions[0] == notch:
+            temp_num = self.walzen2.pop(0)
+            self.walzen2.insert(last_pos, temp_num)
+
+            if self.positions[1] < 25:
+                self.positions[1] += 1
+            else:
+                self.positions[1] = 0
+
+            notch = find_dictionary(self.turnover, 'key', self.walzenlage[1])['value']
+            
+            if self.positions[1] == notch:
+                temp_num = self.walzen3.pop(0)
+                self.walzen3.insert(last_pos, temp_num)
+
+        return
 
 
-    def _process_message(self, message: str) -> str:
+    def __process_message(
+            self, 
+            message: str) -> str:
         """Processes a message using the Enigma object's settings"""
 
+        messageOut = ''
         message = message.replace(" ", "")
+        pos = 0
 
         for letter in message:
-            
+            self.__shift_walzen()
+
+            if re.match('[A-Z]', letter):
+                #pass the letter through the steckerbrett, walzen, and umkehrwalzen
+                temp_value = find_dictionary(self.steckerbrett, 'key', letter)['value']
+                temp_value2 = self.walzen1[temp_value]['value']
+                temp_value = find_dict_index(self.walzen1, 'key', temp_value2)
+                temp_value2 = self.walzen2[temp_value]['value']
+                temp_value = find_dict_index(self.walzen2, 'key', temp_value2)
+                temp_value2 = self.walzen3[temp_value]['value']
+                temp_value = find_dict_index(self.walzen3, 'key', temp_value2)
+                temp_value2 = self.umkerwalze[temp_value]
+
+                #pass the letter back through the walzen and steckerbrett
+                temp_value = reference.index(temp_value2)
+                temp_value2 = self.walzen3[temp_value]['key']
+                temp_value3 = find_dictionary(self.walzen3, 'value', temp_value2)['key']
+                temp_value = find_dict_index(self.walzen3, 'key', temp_value3)
+                temp_value2 = self.walzen2[temp_value]['key']
+                temp_value3 = find_dictionary(self.walzen2, 'value', temp_value2)['key']
+                temp_value = find_dict_index(self.walzen2, 'key', temp_value3)
+                temp_value2 = self.walzen1[temp_value]['key']
+                temp_value3 = find_dictionary(self.walzen1, 'value', temp_value2)['key']
+                temp_value = find_dict_index(self.walzen1, 'key', temp_value3)
+                
+                messageOut += find_dictionary(self.steckerbrett, 'value', temp_value)['key']
+
+                #add a space every 5 letters to avoid word length analysis and increase difficulty of nth gram analysis
+                pos += 1
+                if pos % 5 == 0:
+                    messageOut += ' '
+
+        return messageOut
 
 
     def encipher(
         self, 
         plaintext: str) -> str:
-        """
-        Enciphers plaintext using the current Enigma settings
-        """
+        """Enciphers plaintext using the current Enigma settings"""
 
-        ciphertext = self._remove_punctuation(plaintext)
+        plaintext = self.__remove_punctuation(plaintext)
+        return self.__process_message(plaintext)
+
+
+    def decipher(
+        self,
+        ciphertext: str) -> str:
+        """Deciphers ciphertext using current Enigma settings"""
+
+        ciphertext = self.__add_punctuation(ciphertext)
+        return self.__process_message(ciphertext)
+
+
+    #endregion
+
 
     def __init__(self, walzenlage: list, grundstellung: list, umkehrwalze_choice: str, steckerbrett: list):
         self.walzenlage = walzenlage
-        self.walzen1 = shiftArray(self._populate_queue(walzenlage[0]), grundstellung[0])
-        self.walzen2 = shiftArray(self._populate_queue(walzenlage[1]), grundstellung[1])
-        self.walzen3 = shiftArray(self._populate_queue(walzenlage[2]), grundstellung[2])
-        self.turnover = self._walzen_wende(walzenlage)
+        self.walzen1 = shiftArray(self.__populate_queue(walzenlage[0]), grundstellung[0])
+        self.walzen2 = shiftArray(self.__populate_queue(walzenlage[1]), grundstellung[1])
+        self.walzen3 = shiftArray(self.__populate_queue(walzenlage[2]), grundstellung[2])
+        self.turnover = self.__walzen_wende(walzenlage)
         self.positions = grundstellung
-        self.umkerwalze = self._assign_umkehrwalze(umkehrwalze_choice)
-        self.steckerbrett = self._steckerverbindungen(steckerbrett)
+        self.umkerwalze = self.__assign_umkehrwalze(umkehrwalze_choice)
+        self.steckerbrett = self.__steckerverbindungen(steckerbrett)
